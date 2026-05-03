@@ -1,0 +1,338 @@
+@model Lab7_IA.Models.Producto
+
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <div>
+            <h1 class="form-title">
+                <i class="bi bi-trash"></i>
+                Eliminar Producto
+            </h1>
+            <p class="form-subtitle">¿Estás seguro de que deseas eliminar este producto?</p>
+        </div>
+        <a asp-action="Index" class="btn-back">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
+    </div>
+
+    <div class="alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        <div>
+            <strong>Advertencia:</strong> Esta acción no se puede deshacer. El producto será eliminado permanentemente.
+        </div>
+    </div>
+
+    <div class="details-card">
+        <div class="details-header">
+            <h3>Información del Producto</h3>
+        </div>
+        
+        <div class="details-grid">
+            <div class="detail-item">
+                <span class="detail-label">
+                    <i class="bi bi-hash"></i>
+                    ID
+                </span>
+                <span class="detail-value">@Model.IdProducto</span>
+            </div>
+
+            <div class="detail-item full-width">
+                <span class="detail-label">
+                    <i class="bi bi-box"></i>
+                    Nombre del Producto
+                </span>
+                <span class="detail-value product-name">@Model.NombreProducto</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">
+                    <i class="bi bi-tag"></i>
+                    Categoría
+                </span>
+                <span class="detail-value">
+                    <span class="badge-category">@Model.NombreCategoria</span>
+                </span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">
+                    <i class="bi bi-building"></i>
+                    Proveedor
+                </span>
+                <span class="detail-value">@Model.NombreProveedor</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">
+                    <i class="bi bi-rulers"></i>
+                    Unidad de Medida
+                </span>
+                <span class="detail-value">@Model.Umedida</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">
+                    <i class="bi bi-currency-dollar"></i>
+                    Precio Unitario
+                </span>
+                <span class="detail-value price">$@Model.PrecioUnidad.ToString("N2")</span>
+            </div>
+
+            <div class="detail-item">
+                <span class="detail-label">
+                    <i class="bi bi-boxes"></i>
+                    Stock
+                </span>
+                <span class="detail-value">
+                    <span class="badge-stock @(Model.UnidadesEnExistencia > 20 ? "stock-high" : Model.UnidadesEnExistencia > 0 ? "stock-medium" : "stock-low")">
+                        @Model.UnidadesEnExistencia unidades
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post" class="delete-form">
+            <input type="hidden" asp-for="IdProducto" />
+            <div class="form-actions">
+                <a asp-action="Index" class="btn-secondary">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn-danger">
+                    <i class="bi bi-trash"></i>
+                    Confirmar Eliminación
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .form-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .form-title i {
+        font-size: 1.75rem;
+        color: #ff3b30;
+    }
+
+    .form-subtitle {
+        color: #6e6e73;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: rgba(0, 0, 0, 0.04);
+        color: #1d1d1f;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #1d1d1f;
+        transform: translateY(-1px);
+    }
+
+    .alert-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        background: rgba(255, 149, 0, 0.1);
+        border: 1px solid rgba(255, 149, 0, 0.3);
+        color: #c65d00;
+    }
+
+    .alert-warning i {
+        font-size: 1.25rem;
+        margin-top: 0.125rem;
+    }
+
+    .details-card {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .details-header {
+        padding: 1.5rem 2rem;
+        background: rgba(0, 0, 0, 0.02);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .details-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1d1d1f;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detail-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .detail-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #6e6e73;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-label i {
+        font-size: 1rem;
+        color: #86868b;
+    }
+
+    .detail-value {
+        font-size: 1.125rem;
+        color: #1d1d1f;
+        font-weight: 500;
+    }
+
+    .product-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .price {
+        color: #0071e3;
+        font-weight: 600;
+    }
+
+    .badge-category {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: rgba(0, 113, 227, 0.1);
+        color: #0071e3;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .badge-stock {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .stock-high {
+        background: rgba(52, 199, 89, 0.15);
+        color: #1d7a3a;
+    }
+
+    .stock-medium {
+        background: rgba(255, 149, 0, 0.15);
+        color: #c65d00;
+    }
+
+    .stock-low {
+        background: rgba(255, 59, 48, 0.15);
+        color: #c41e3a;
+    }
+
+    .delete-form {
+        padding: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    .btn-danger, .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.75rem;
+        border-radius: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-danger {
+        background: rgba(255, 59, 48, 0.95);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: rgba(255, 59, 48, 1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+    }
+
+    .btn-secondary {
+        background: rgba(0, 0, 0, 0.04);
+        color: #1d1d1f;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #1d1d1f;
+    }
+
+   
+</style>

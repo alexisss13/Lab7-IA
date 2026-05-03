@@ -1,0 +1,493 @@
+@model IEnumerable<Lab7_IA.Models.Producto>
+
+@{
+    ViewData["Title"] = "Gestión de Productos";
+}
+
+<div class="productos-container">
+    <div class="header-section">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="bi bi-box-seam"></i>
+                Productos
+            </h1>
+            <p class="page-subtitle">Administra el catálogo de productos</p>
+        </div>
+        <a asp-action="Create" class="btn-primary-custom">
+            <i class="bi bi-plus-circle"></i>
+            Nuevo Producto
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">
+            <i class="bi bi-check-circle"></i>
+            <span>@TempData["Success"]</span>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-error">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>@TempData["Error"]</span>
+        </div>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>@ViewBag.Error</span>
+        </div>
+    }
+
+    <!-- Formulario de Búsqueda -->
+    <div class="search-container">
+        <form asp-action="Index" method="get" class="search-form">
+            <div class="search-grid">
+                <div class="search-field">
+                    <label for="nombreProducto" class="search-label">
+                        <i class="bi bi-search"></i>
+                        Buscar por nombre
+                    </label>
+                    <input type="text" 
+                           id="nombreProducto" 
+                           name="nombreProducto" 
+                           class="search-input" 
+                           placeholder="Nombre del producto..."
+                           value="@ViewBag.NombreProducto" />
+                </div>
+
+                <div class="search-field">
+                    <label for="idCategoria" class="search-label">
+                        <i class="bi bi-funnel"></i>
+                        Filtrar por categoría
+                    </label>
+                    <select id="idCategoria" name="idCategoria" class="search-select">
+                        <option value="">Todas las categorías</option>
+                        @if (ViewBag.CategoriasParaFiltro != null)
+                        {
+                            @foreach (var categoria in ViewBag.CategoriasParaFiltro)
+                            {
+                                <option value="@categoria.IdCategoria" 
+                                        selected="@(ViewBag.IdCategoriaFiltro == categoria.IdCategoria)">
+                                    @categoria.NombreCategoria
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="search-actions">
+                    <button type="submit" class="btn-search">
+                        <i class="bi bi-search"></i>
+                        Buscar
+                    </button>
+                    <a asp-action="Index" class="btn-clear">
+                        <i class="bi bi-x-circle"></i>
+                        Limpiar
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Proveedor</th>
+                    <th>Unidad de Medida</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th class="actions-column">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="id-column">@item.IdProducto</td>
+                        <td class="product-name">@item.NombreProducto</td>
+                        <td>
+                            <span class="badge-category">@item.NombreCategoria</span>
+                        </td>
+                        <td class="supplier-name">@item.NombreProveedor</td>
+                        <td>@item.Umedida</td>
+                        <td class="price-column">$@item.PrecioUnidad.ToString("N2")</td>
+                        <td>
+                            <span class="badge-stock @(item.UnidadesEnExistencia > 20 ? "stock-high" : item.UnidadesEnExistencia > 0 ? "stock-medium" : "stock-low")">
+                                @item.UnidadesEnExistencia
+                            </span>
+                        </td>
+                        <td class="actions-column">
+                            <div class="action-buttons">
+                                <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn-action btn-info" title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.IdProducto" class="btn-action btn-edit" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.IdProducto" class="btn-action btn-delete" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .productos-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .header-content {
+        flex: 1;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-title i {
+        font-size: 1.75rem;
+        color: #0071e3;
+    }
+
+    .page-subtitle {
+        color: #6e6e73;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .btn-primary-custom {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: rgba(0, 113, 227, 0.95);
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-primary-custom:hover {
+        background: rgba(0, 113, 227, 1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+        color: white;
+    }
+
+    .alert-success, .alert-error {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .alert-success {
+        background: rgba(52, 199, 89, 0.1);
+        border: 1px solid rgba(52, 199, 89, 0.3);
+        color: #1d7a3a;
+    }
+
+    .alert-error {
+        background: rgba(255, 59, 48, 0.1);
+        border: 1px solid rgba(255, 59, 48, 0.3);
+        color: #c41e3a;
+    }
+
+    .table-container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table thead {
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .data-table th {
+        padding: 1rem 1.25rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #6e6e73;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .data-table td {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        color: #1d1d1f;
+    }
+
+    .data-table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .data-table tbody tr:hover {
+        background: rgba(0, 113, 227, 0.03);
+    }
+
+    .id-column {
+        font-weight: 600;
+        color: #6e6e73;
+        font-size: 0.9rem;
+    }
+
+    .product-name {
+        font-weight: 500;
+        color: #1d1d1f;
+    }
+
+    .supplier-name {
+        color: #6e6e73;
+        font-size: 0.9rem;
+    }
+
+    .price-column {
+        font-weight: 600;
+        color: #0071e3;
+    }
+
+    .badge-category {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        background: rgba(0, 113, 227, 0.1);
+        color: #0071e3;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .badge-stock {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        min-width: 50px;
+        text-align: center;
+    }
+
+    .stock-high {
+        background: rgba(52, 199, 89, 0.15);
+        color: #1d7a3a;
+    }
+
+    .stock-medium {
+        background: rgba(255, 149, 0, 0.15);
+        color: #c65d00;
+    }
+
+    .stock-low {
+        background: rgba(255, 59, 48, 0.15);
+        color: #c41e3a;
+    }
+
+    .actions-column {
+        text-align: center;
+        width: 180px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+
+    .btn-info {
+        background: rgba(0, 113, 227, 0.1);
+        color: #0071e3;
+    }
+
+    .btn-info:hover {
+        background: rgba(0, 113, 227, 0.2);
+        color: #0071e3;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit {
+        background: rgba(255, 149, 0, 0.1);
+        color: #c65d00;
+    }
+
+    .btn-edit:hover {
+        background: rgba(255, 149, 0, 0.2);
+        color: #c65d00;
+        transform: translateY(-1px);
+    }
+
+    .btn-delete {
+        background: rgba(255, 59, 48, 0.1);
+        color: #c41e3a;
+    }
+
+    .btn-delete:hover {
+        background: rgba(255, 59, 48, 0.2);
+        color: #c41e3a;
+        transform: translateY(-1px);
+    }
+
+    /* Estilos del formulario de búsqueda */
+    .search-container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .search-form {
+        margin: 0;
+    }
+
+    .search-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .search-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        color: #1d1d1f;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .search-label i {
+        color: #0071e3;
+        font-size: 1rem;
+    }
+
+    .search-input, .search-select {
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.9);
+        color: #1d1d1f;
+    }
+
+    .search-input:focus, .search-select:focus {
+        outline: none;
+        border-color: #0071e3;
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        background: white;
+    }
+
+    .search-input::placeholder {
+        color: #86868b;
+    }
+
+    .search-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-search, .btn-clear {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    .btn-search {
+        background: rgba(0, 113, 227, 0.95);
+        color: white;
+    }
+
+    .btn-search:hover {
+        background: rgba(0, 113, 227, 1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+    }
+
+    .btn-clear {
+        background: rgba(0, 0, 0, 0.04);
+        color: #1d1d1f;
+    }
+
+    .btn-clear:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #1d1d1f;
+    }
+
+    
+</style>

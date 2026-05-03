@@ -1,0 +1,474 @@
+@model Lab7_IA.Models.Producto
+
+@{
+    ViewData["Title"] = "Detalles del Producto";
+}
+
+<div class="form-container">
+    <div class="form-header">
+        <div>
+            <h1 class="form-title">
+                <i class="bi bi-info-circle"></i>
+                Detalles del Producto
+            </h1>
+            <p class="form-subtitle">Información completa del producto</p>
+        </div>
+        <a asp-action="Index" class="btn-back">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
+    </div>
+
+    <div class="details-card">
+        <div class="details-header">
+            <div class="product-header-info">
+                <span class="product-id">ID: @Model.IdProducto</span>
+                <h2 class="product-title">@Model.NombreProducto</h2>
+            </div>
+            <div class="header-actions">
+                <a asp-action="Edit" asp-route-id="@Model.IdProducto" class="btn-edit-header">
+                    <i class="bi bi-pencil"></i>
+                    Editar
+                </a>
+            </div>
+        </div>
+
+        <div class="details-body">
+            <div class="details-section">
+                <h3 class="section-title">
+                    <i class="bi bi-info-square"></i>
+                    Información General
+                </h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-tag"></i>
+                            Categoría
+                        </span>
+                        <span class="detail-value">
+                            <span class="badge-category">@Model.NombreCategoria</span>
+                        </span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-building"></i>
+                            Proveedor
+                        </span>
+                        <span class="detail-value">@Model.NombreProveedor</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-rulers"></i>
+                            Unidad de Medida
+                        </span>
+                        <span class="detail-value">@(Model.Umedida ?? "No especificada")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h3 class="section-title">
+                    <i class="bi bi-cash-stack"></i>
+                    Información Comercial
+                </h3>
+                <div class="details-grid">
+                    <div class="detail-item highlight">
+                        <span class="detail-label">
+                            <i class="bi bi-currency-dollar"></i>
+                            Precio Unitario
+                        </span>
+                        <span class="detail-value price-large">$@Model.PrecioUnidad.ToString("N2")</span>
+                    </div>
+
+                    <div class="detail-item highlight">
+                        <span class="detail-label">
+                            <i class="bi bi-boxes"></i>
+                            Stock Disponible
+                        </span>
+                        <span class="detail-value">
+                            <span class="badge-stock-large @(Model.UnidadesEnExistencia > 20 ? "stock-high" : Model.UnidadesEnExistencia > 0 ? "stock-medium" : "stock-low")">
+                                @Model.UnidadesEnExistencia unidades
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-calculator"></i>
+                            Valor Total en Stock
+                        </span>
+                        <span class="detail-value total-value">$@((Model.PrecioUnidad * Model.UnidadesEnExistencia).ToString("N2"))</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-graph-up"></i>
+                            Estado
+                        </span>
+                        <span class="detail-value">
+                            @if (Model.UnidadesEnExistencia > 20)
+                            {
+                                <span class="status-badge status-good">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Stock Óptimo
+                                </span>
+                            }
+                            else if (Model.UnidadesEnExistencia > 0)
+                            {
+                                <span class="status-badge status-warning">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    Stock Bajo
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge status-critical">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    Sin Stock
+                                </span>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-footer">
+            <a asp-action="Index" class="btn-secondary">
+                <i class="bi bi-arrow-left"></i>
+                Volver al Listado
+            </a>
+            <div class="footer-actions">
+                <a asp-action="Edit" asp-route-id="@Model.IdProducto" class="btn-primary">
+                    <i class="bi bi-pencil"></i>
+                    Editar Producto
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.IdProducto" class="btn-danger">
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .form-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .form-title i {
+        font-size: 1.75rem;
+        color: #0071e3;
+    }
+
+    .form-subtitle {
+        color: #6e6e73;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: rgba(0, 0, 0, 0.04);
+        color: #1d1d1f;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #1d1d1f;
+        transform: translateY(-1px);
+    }
+
+    .details-card {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .details-header {
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(0, 113, 227, 0.05) 0%, rgba(0, 113, 227, 0.02) 100%);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .product-header-info {
+        flex: 1;
+    }
+
+    .product-id {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        background: rgba(0, 113, 227, 0.1);
+        color: #0071e3;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .product-title {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #1d1d1f;
+    }
+
+    .btn-edit-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: rgba(255, 149, 0, 0.1);
+        color: #c65d00;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-edit-header:hover {
+        background: rgba(255, 149, 0, 0.2);
+        color: #c65d00;
+        transform: translateY(-1px);
+    }
+
+    .details-body {
+        padding: 2rem;
+    }
+
+    .details-section {
+        margin-bottom: 2rem;
+    }
+
+    .details-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .section-title i {
+        color: #0071e3;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.02);
+        border-radius: 12px;
+    }
+
+    .detail-item.highlight {
+        background: linear-gradient(135deg, rgba(0, 113, 227, 0.05) 0%, rgba(0, 113, 227, 0.02) 100%);
+        border: 1px solid rgba(0, 113, 227, 0.1);
+    }
+
+    .detail-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #6e6e73;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-label i {
+        font-size: 1rem;
+        color: #86868b;
+    }
+
+    .detail-value {
+        font-size: 1.125rem;
+        color: #1d1d1f;
+        font-weight: 500;
+    }
+
+    .price-large {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0071e3;
+    }
+
+    .total-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #34c759;
+    }
+
+    .badge-category {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: rgba(0, 113, 227, 0.1);
+        color: #0071e3;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .badge-stock-large {
+        display: inline-block;
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .stock-high {
+        background: rgba(52, 199, 89, 0.15);
+        color: #1d7a3a;
+    }
+
+    .stock-medium {
+        background: rgba(255, 149, 0, 0.15);
+        color: #c65d00;
+    }
+
+    .stock-low {
+        background: rgba(255, 59, 48, 0.15);
+        color: #c41e3a;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .status-good {
+        background: rgba(52, 199, 89, 0.15);
+        color: #1d7a3a;
+    }
+
+    .status-warning {
+        background: rgba(255, 149, 0, 0.15);
+        color: #c65d00;
+    }
+
+    .status-critical {
+        background: rgba(255, 59, 48, 0.15);
+        color: #c41e3a;
+    }
+
+    .details-footer {
+        padding: 1.5rem 2rem;
+        background: rgba(0, 0, 0, 0.02);
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .footer-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .btn-primary, .btn-secondary, .btn-danger {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        background: rgba(0, 113, 227, 0.95);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: rgba(0, 113, 227, 1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: rgba(0, 0, 0, 0.04);
+        color: #1d1d1f;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #1d1d1f;
+    }
+
+    .btn-danger {
+        background: rgba(255, 59, 48, 0.1);
+        color: #c41e3a;
+    }
+
+    .btn-danger:hover {
+        background: rgba(255, 59, 48, 0.95);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+   
+</style>
