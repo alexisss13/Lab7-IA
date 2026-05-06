@@ -43,53 +43,178 @@
         </div>
     }
 
-    <!-- Formulario de Búsqueda -->
+    <!-- Formulario de Búsqueda y Filtros Avanzados -->
     <div class="search-container">
-        <form asp-action="Index" method="get" class="search-form">
-            <div class="search-grid">
-                <div class="search-field">
-                    <label for="nombreProducto" class="search-label">
-                        <i class="bi bi-search"></i>
-                        Buscar por nombre
-                    </label>
-                    <input type="text" 
-                           id="nombreProducto" 
-                           name="nombreProducto" 
-                           class="search-input" 
-                           placeholder="Nombre del producto..."
-                           value="@ViewBag.NombreProducto" />
-                </div>
+        <form asp-action="Index" method="get" class="search-form" id="filterForm">
+            <!-- Filtros Básicos -->
+            <div class="search-section">
+                <h3 class="section-title">
+                    <i class="bi bi-search"></i>
+                    Búsqueda y Filtros
+                </h3>
+                <div class="search-grid">
+                    <div class="search-field">
+                        <label for="nombreProducto" class="search-label">
+                            <i class="bi bi-tag"></i>
+                            Nombre del producto
+                        </label>
+                        <input type="text" 
+                               id="nombreProducto" 
+                               name="nombreProducto" 
+                               class="search-input" 
+                               placeholder="Buscar por nombre..."
+                               value="@ViewBag.NombreProducto" />
+                    </div>
 
-                <div class="search-field">
-                    <label for="idCategoria" class="search-label">
-                        <i class="bi bi-funnel"></i>
-                        Filtrar por categoría
-                    </label>
-                    <select id="idCategoria" name="idCategoria" class="search-select">
-                        <option value="">Todas las categorías</option>
-                        @if (ViewBag.CategoriasParaFiltro != null)
-                        {
-                            @foreach (var categoria in ViewBag.CategoriasParaFiltro)
+                    <div class="search-field">
+                        <label for="idCategoria" class="search-label">
+                            <i class="bi bi-funnel"></i>
+                            Categoría
+                        </label>
+                        <select id="idCategoria" name="idCategoria" class="search-select">
+                            <option value="">Todas las categorías</option>
+                            @if (ViewBag.CategoriasParaFiltro != null)
                             {
-                                <option value="@categoria.IdCategoria" 
-                                        selected="@(ViewBag.IdCategoriaFiltro == categoria.IdCategoria)">
-                                    @categoria.NombreCategoria
-                                </option>
+                                @foreach (var categoria in ViewBag.CategoriasParaFiltro)
+                                {
+                                    <option value="@categoria.IdCategoria" 
+                                            selected="@(ViewBag.IdCategoriaFiltro == categoria.IdCategoria)">
+                                        @categoria.NombreCategoria
+                                    </option>
+                                }
                             }
-                        }
-                    </select>
-                </div>
+                        </select>
+                    </div>
 
-                <div class="search-actions">
-                    <button type="submit" class="btn-search">
-                        <i class="bi bi-search"></i>
-                        Buscar
-                    </button>
-                    <a asp-action="Index" class="btn-clear">
-                        <i class="bi bi-x-circle"></i>
-                        Limpiar
-                    </a>
+                    <div class="search-field">
+                        <label for="idProveedor" class="search-label">
+                            <i class="bi bi-building"></i>
+                            Proveedor
+                        </label>
+                        <select id="idProveedor" name="idProveedor" class="search-select">
+                            <option value="">Todos los proveedores</option>
+                            @if (ViewBag.ProveedoresParaFiltro != null)
+                            {
+                                @foreach (var proveedor in ViewBag.ProveedoresParaFiltro)
+                                {
+                                    <option value="@proveedor.IdProveedor" 
+                                            selected="@(ViewBag.IdProveedorFiltro == proveedor.IdProveedor)">
+                                        @proveedor.NombreCia
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Filtros Avanzados -->
+            <div class="advanced-filters">
+                <button type="button" class="btn-toggle-filters" id="toggleAdvanced">
+                    <i class="bi bi-sliders"></i>
+                    <span id="toggleText">Mostrar filtros avanzados</span>
+                    <i class="bi bi-chevron-down" id="toggleIcon"></i>
+                </button>
+
+                <div class="advanced-filters-content" id="advancedFilters" style="display: none;">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="bi bi-currency-dollar"></i>
+                                Rango de Precio
+                            </label>
+                            <div class="range-inputs">
+                                <input type="number" 
+                                       name="precioMin" 
+                                       class="range-input" 
+                                       placeholder="Mínimo"
+                                       step="0.01"
+                                       min="0"
+                                       value="@ViewBag.PrecioMin" />
+                                <span class="range-separator">-</span>
+                                <input type="number" 
+                                       name="precioMax" 
+                                       class="range-input" 
+                                       placeholder="Máximo"
+                                       step="0.01"
+                                       min="0"
+                                       value="@ViewBag.PrecioMax" />
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="bi bi-box"></i>
+                                Rango de Stock
+                            </label>
+                            <div class="range-inputs">
+                                <input type="number" 
+                                       name="stockMin" 
+                                       class="range-input" 
+                                       placeholder="Mínimo"
+                                       min="0"
+                                       value="@ViewBag.StockMin" />
+                                <span class="range-separator">-</span>
+                                <input type="number" 
+                                       name="stockMax" 
+                                       class="range-input" 
+                                       placeholder="Máximo"
+                                       min="0"
+                                       value="@ViewBag.StockMax" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ordenamiento -->
+            <div class="sort-section">
+                <div class="sort-controls">
+                    <div class="sort-field">
+                        <label for="ordenarPor" class="sort-label">
+                            <i class="bi bi-sort-down"></i>
+                            Ordenar por
+                        </label>
+                        <select id="ordenarPor" name="ordenarPor" class="sort-select">
+                            <option value="nombre" selected="@(ViewBag.OrdenarPor == "nombre" || ViewBag.OrdenarPor == null)">Nombre</option>
+                            <option value="precio" selected="@(ViewBag.OrdenarPor == "precio")">Precio</option>
+                            <option value="stock" selected="@(ViewBag.OrdenarPor == "stock")">Stock</option>
+                            <option value="categoria" selected="@(ViewBag.OrdenarPor == "categoria")">Categoría</option>
+                            <option value="proveedor" selected="@(ViewBag.OrdenarPor == "proveedor")">Proveedor</option>
+                            <option value="id" selected="@(ViewBag.OrdenarPor == "id")">ID</option>
+                        </select>
+                    </div>
+
+                    <div class="sort-direction">
+                        <button type="button" 
+                                class="btn-sort-direction @(ViewBag.Direccion == "ASC" || ViewBag.Direccion == null ? "active" : "")" 
+                                data-direction="ASC"
+                                title="Ascendente">
+                            <i class="bi bi-sort-alpha-down"></i>
+                            <span>A-Z</span>
+                        </button>
+                        <button type="button" 
+                                class="btn-sort-direction @(ViewBag.Direccion == "DESC" ? "active" : "")" 
+                                data-direction="DESC"
+                                title="Descendente">
+                            <i class="bi bi-sort-alpha-up"></i>
+                            <span>Z-A</span>
+                        </button>
+                        <input type="hidden" name="direccion" id="direccion" value="@(ViewBag.Direccion ?? "ASC")" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="search-actions">
+                <button type="submit" class="btn-search">
+                    <i class="bi bi-search"></i>
+                    Buscar
+                </button>
+                <a asp-action="Index" class="btn-clear">
+                    <i class="bi bi-x-circle"></i>
+                    Limpiar filtros
+                </a>
             </div>
         </form>
     </div>
@@ -98,13 +223,61 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Producto</th>
-                    <th>Categoría</th>
-                    <th>Proveedor</th>
+                    <th>
+                        <a href="#" class="sort-header" data-sort="id">
+                            ID
+                            @if (ViewBag.OrdenarPor == "id")
+                            {
+                                <i class="bi bi-@(ViewBag.Direccion == "ASC" ? "arrow-up" : "arrow-down")"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="sort-header" data-sort="nombre">
+                            Producto
+                            @if (ViewBag.OrdenarPor == "nombre" || ViewBag.OrdenarPor == null)
+                            {
+                                <i class="bi bi-@(ViewBag.Direccion == "DESC" ? "arrow-down" : "arrow-up")"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="sort-header" data-sort="categoria">
+                            Categoría
+                            @if (ViewBag.OrdenarPor == "categoria")
+                            {
+                                <i class="bi bi-@(ViewBag.Direccion == "ASC" ? "arrow-up" : "arrow-down")"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="sort-header" data-sort="proveedor">
+                            Proveedor
+                            @if (ViewBag.OrdenarPor == "proveedor")
+                            {
+                                <i class="bi bi-@(ViewBag.Direccion == "ASC" ? "arrow-up" : "arrow-down")"></i>
+                            }
+                        </a>
+                    </th>
                     <th>Unidad de Medida</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
+                    <th>
+                        <a href="#" class="sort-header" data-sort="precio">
+                            Precio
+                            @if (ViewBag.OrdenarPor == "precio")
+                            {
+                                <i class="bi bi-@(ViewBag.Direccion == "ASC" ? "arrow-up" : "arrow-down")"></i>
+                            }
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" class="sort-header" data-sort="stock">
+                            Stock
+                            @if (ViewBag.OrdenarPor == "stock")
+                            {
+                                <i class="bi bi-@(ViewBag.Direccion == "ASC" ? "arrow-up" : "arrow-down")"></i>
+                            }
+                        </a>
+                    </th>
                     <th class="actions-column">Acciones</th>
                 </tr>
             </thead>
@@ -489,5 +662,334 @@
         color: #1d1d1f;
     }
 
+    /* Estilos para filtros avanzados */
+    .search-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin: 0 0 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title i {
+        color: #0071e3;
+    }
+
+    .advanced-filters {
+        margin: 1.5rem 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-toggle-filters {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(0, 113, 227, 0.05);
+        border: 1px solid rgba(0, 113, 227, 0.2);
+        border-radius: 10px;
+        color: #0071e3;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-toggle-filters:hover {
+        background: rgba(0, 113, 227, 0.1);
+        border-color: rgba(0, 113, 227, 0.3);
+    }
+
+    .btn-toggle-filters i:last-child {
+        margin-left: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-toggle-filters.active i:last-child {
+        transform: rotate(180deg);
+    }
+
+    .advanced-filters-content {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .filters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        color: #1d1d1f;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .filter-label i {
+        color: #0071e3;
+    }
+
+    .range-inputs {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .range-input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.9);
+        color: #1d1d1f;
+    }
+
+    .range-input:focus {
+        outline: none;
+        border-color: #0071e3;
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        background: white;
+    }
+
+    .range-separator {
+        color: #6e6e73;
+        font-weight: 500;
+    }
+
+    /* Estilos para ordenamiento */
+    .sort-section {
+        margin: 1.5rem 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .sort-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .sort-field {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sort-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        color: #1d1d1f;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .sort-label i {
+        color: #0071e3;
+    }
+
+    .sort-select {
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.9);
+        color: #1d1d1f;
+    }
+
+    .sort-select:focus {
+        outline: none;
+        border-color: #0071e3;
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        background: white;
+    }
+
+    .sort-direction {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-sort-direction {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 10px;
+        color: #6e6e73;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .btn-sort-direction:hover {
+        background: rgba(0, 0, 0, 0.08);
+        border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-sort-direction.active {
+        background: rgba(0, 113, 227, 0.95);
+        border-color: rgba(0, 113, 227, 1);
+        color: white;
+    }
+
+    .btn-sort-direction i {
+        font-size: 1.1rem;
+    }
+
+    /* Estilos para headers ordenables */
+    .sort-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6e6e73;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        cursor: pointer;
+    }
+
+    .sort-header:hover {
+        color: #0071e3;
+    }
+
+    .sort-header i {
+        font-size: 0.85rem;
+        color: #0071e3;
+    }
+
+    
+
     
 </style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle filtros avanzados
+            const toggleBtn = document.getElementById('toggleAdvanced');
+            const advancedFilters = document.getElementById('advancedFilters');
+            const toggleText = document.getElementById('toggleText');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            // Verificar si hay filtros avanzados activos al cargar
+            const hasAdvancedFilters = @((ViewBag.PrecioMin != null || ViewBag.PrecioMax != null || ViewBag.StockMin != null || ViewBag.StockMax != null) ? "true" : "false");
+            
+            if (hasAdvancedFilters) {
+                advancedFilters.style.display = 'block';
+                toggleBtn.classList.add('active');
+                toggleText.textContent = 'Ocultar filtros avanzados';
+            }
+
+            toggleBtn.addEventListener('click', function() {
+                const isVisible = advancedFilters.style.display === 'block';
+                
+                if (isVisible) {
+                    advancedFilters.style.display = 'none';
+                    toggleBtn.classList.remove('active');
+                    toggleText.textContent = 'Mostrar filtros avanzados';
+                } else {
+                    advancedFilters.style.display = 'block';
+                    toggleBtn.classList.add('active');
+                    toggleText.textContent = 'Ocultar filtros avanzados';
+                }
+            });
+
+            // Botones de dirección de ordenamiento
+            const sortDirectionButtons = document.querySelectorAll('.btn-sort-direction');
+            const direccionInput = document.getElementById('direccion');
+
+            sortDirectionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const direction = this.getAttribute('data-direction');
+                    direccionInput.value = direction;
+                    
+                    // Actualizar estado visual
+                    sortDirectionButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Headers de tabla ordenables
+            const sortHeaders = document.querySelectorAll('.sort-header');
+            const ordenarPorSelect = document.getElementById('ordenarPor');
+            const filterForm = document.getElementById('filterForm');
+
+            sortHeaders.forEach(header => {
+                header.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sortBy = this.getAttribute('data-sort');
+                    const currentSort = '@ViewBag.OrdenarPor';
+                    const currentDirection = '@(ViewBag.Direccion ?? "ASC")';
+
+                    // Si es la misma columna, cambiar dirección
+                    if (currentSort === sortBy) {
+                        direccionInput.value = currentDirection === 'ASC' ? 'DESC' : 'ASC';
+                    } else {
+                        // Nueva columna, empezar con ASC
+                        direccionInput.value = 'ASC';
+                    }
+
+                    ordenarPorSelect.value = sortBy;
+                    filterForm.submit();
+                });
+            });
+
+            // Validación de rangos
+            const precioMinInput = document.querySelector('input[name="precioMin"]');
+            const precioMaxInput = document.querySelector('input[name="precioMax"]');
+            const stockMinInput = document.querySelector('input[name="stockMin"]');
+            const stockMaxInput = document.querySelector('input[name="stockMax"]');
+
+            function validateRange(minInput, maxInput, fieldName) {
+                const min = parseFloat(minInput.value);
+                const max = parseFloat(maxInput.value);
+
+                if (min && max && min > max) {
+                    alert(`El ${fieldName} mínimo no puede ser mayor que el máximo`);
+                    return false;
+                }
+                return true;
+            }
+
+            filterForm.addEventListener('submit', function(e) {
+                if (precioMinInput && precioMaxInput) {
+                    if (!validateRange(precioMinInput, precioMaxInput, 'precio')) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+
+                if (stockMinInput && stockMaxInput) {
+                    if (!validateRange(stockMinInput, stockMaxInput, 'stock')) {
+                        e.preventDefault();
+                        return;
+                    }
+                }
+            });
+        });
+    </script>
+}

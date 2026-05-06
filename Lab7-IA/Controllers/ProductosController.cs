@@ -19,7 +19,16 @@ namespace Lab7_IA.Controllers
         }
 
         // GET: Productos
-        public IActionResult Index(string nombreProducto, int? idCategoria)
+        public IActionResult Index(
+            string nombreProducto, 
+            int? idCategoria, 
+            int? idProveedor,
+            decimal? precioMin,
+            decimal? precioMax,
+            int? stockMin,
+            int? stockMax,
+            string ordenarPor = "nombre",
+            string direccion = "ASC")
         {
             List<Producto> productos = new List<Producto>();
 
@@ -29,20 +38,20 @@ namespace Lab7_IA.Controllers
                 {
                     conn.Open();
                     
-                    // Si hay filtros, usar sp_BuscarProductos, sino sp_ListarProductos
-                    string spName = (!string.IsNullOrEmpty(nombreProducto) || (idCategoria.HasValue && idCategoria > 0)) 
-                        ? "sp_BuscarProductos" 
-                        : "sp_ListarProductos";
-
-                    using (MySqlCommand cmd = new MySqlCommand(spName, conn))
+                    // Usar el nuevo stored procedure con ordenamiento
+                    using (MySqlCommand cmd = new MySqlCommand("sp_BuscarYOrdenarProductos", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        if (spName == "sp_BuscarProductos")
-                        {
-                            cmd.Parameters.AddWithValue("p_NombreProducto", nombreProducto ?? (object)DBNull.Value);
-                            cmd.Parameters.AddWithValue("p_IdCategoria", idCategoria ?? (object)DBNull.Value);
-                        }
+                        cmd.Parameters.AddWithValue("p_NombreProducto", nombreProducto ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("p_IdCategoria", idCategoria ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("p_IdProveedor", idProveedor ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("p_PrecioMin", precioMin ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("p_PrecioMax", precioMax ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("p_StockMin", stockMin ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("p_StockMax", stockMax ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("p_OrdenarPor", ordenarPor ?? "nombre");
+                        cmd.Parameters.AddWithValue("p_Direccion", direccion ?? "ASC");
 
                         using (MySqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -65,12 +74,19 @@ namespace Lab7_IA.Controllers
                     }
                 }
 
-                // Cargar categorías para el filtro
-                CargarCategorias();
+                // Cargar categorías y proveedores para los filtros
+                CargarCategoriasYProveedoresParaFiltro();
                 
-                // Mantener los valores de búsqueda
+                // Mantener los valores de búsqueda y ordenamiento
                 ViewBag.NombreProducto = nombreProducto;
                 ViewBag.IdCategoriaFiltro = idCategoria;
+                ViewBag.IdProveedorFiltro = idProveedor;
+                ViewBag.PrecioMin = precioMin;
+                ViewBag.PrecioMax = precioMax;
+                ViewBag.StockMin = stockMin;
+                ViewBag.StockMax = stockMax;
+                ViewBag.OrdenarPor = ordenarPor;
+                ViewBag.Direccion = direccion;
             }
             catch (MySqlException ex)
             {
@@ -478,7 +494,7 @@ namespace Lab7_IA.Controllers
             }
         }
 
-        // Método auxiliar para cargar solo categorías (para filtro)
+        // Método auxiliar para cargar categorías (para filtro)
         private void CargarCategorias()
         {
             List<Categoria> categorias = new List<Categoria>();
@@ -511,6 +527,64 @@ namespace Lab7_IA.Controllers
             {
                 _logger.LogError(ex, "Error al cargar categorías para filtro");
                 ViewBag.CategoriasParaFiltro = new List<Categoria>();
+            }
+        }
+
+        // Método auxiliar para cargar categorías y proveedores para filtros
+        private void CargarCategoriasYProveedoresParaFiltro()
+        {
+            List<Categoria> categorias = new List<Categoria>();
+            List<Proveedor> proveedores = new List<Proveedor>();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    // Cargar categorías
+                    using (MySqlCommand cmd = new MySqlCommand("sp_ListarCategorias", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                categorias.Add(new Categoria
+                                {
+                                    IdCategoria = reader.GetInt32("IdCategoria"),
+                                    NombreCategoria = reader.GetString("NombreCategoria")
+                                });
+                            }
+                        }
+                    }
+
+                    // Cargar proveedores
+                    using (MySqlCommand cmd = new MySqlCommand("sp_ListarProveedores", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                proveedores.Add(new Proveedor
+                                {
+                                    IdProveedor = reader.GetInt32("IdProveedor"),
+                                    NombreCia = reader.GetString("NombreCia")
+                                });
+                            }
+                        }
+                    }
+                }
+
+                ViewBag.CategoriasParaFiltro = categorias;
+                ViewBag.ProveedoresParaFiltro = proveedores;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cargar listas para filtros");
+                ViewBag.CategoriasParaFiltro = new List<Categoria>();
+                ViewBag.ProveedoresParaFiltro = new List<Proveedor>();
             }
         }
     }

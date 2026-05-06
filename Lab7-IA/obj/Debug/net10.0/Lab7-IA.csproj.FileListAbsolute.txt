@@ -115,3 +115,4 @@ C:\Principal\Desarrollador\Desarrollo de Aplicaciones Empresariales Avanzado\Pro
 C:\Principal\Desarrollador\Desarrollo de Aplicaciones Empresariales Avanzado\Proyecto\Lab7-IA\Lab7-IA\obj\Debug\net10.0\Lab7-IA.pdb
 C:\Principal\Desarrollador\Desarrollo de Aplicaciones Empresariales Avanzado\Proyecto\Lab7-IA\Lab7-IA\obj\Debug\net10.0\Lab7-IA.genruntimeconfig.cache
 C:\Principal\Desarrollador\Desarrollo de Aplicaciones Empresariales Avanzado\Proyecto\Lab7-IA\Lab7-IA\obj\Debug\net10.0\ref\Lab7-IA.dll
+C:\Principal\Desarrollador\Desarrollo de Aplicaciones Empresariales Avanzado\Proyecto\Lab7-IA\Lab7-IA\obj\Debug\net10.0\Lab7-IA.sourcelink.json

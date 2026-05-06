@@ -4,109 +4,165 @@
     ViewData["Title"] = "Editar Producto";
 }
 
-<div class="form-container">
-    <div class="form-header">
-        <div>
-            <h1 class="form-title">
+<div class="form-cyberpunk-container">
+    <!-- Hero Header -->
+    <div class="form-hero-header">
+        <div class="form-hero-content">
+            <div class="icon-circle edit-icon">
                 <i class="bi bi-pencil-square"></i>
-                Editar Producto
-            </h1>
-            <p class="form-subtitle">Modifica la información del producto</p>
+            </div>
+            <div>
+                <h1 class="form-hero-title">
+                    <span class="text-gradient-edit">Editar Producto</span>
+                </h1>
+                <p class="form-hero-subtitle">Modifica la información del producto</p>
+            </div>
         </div>
-        <a asp-action="Index" class="btn-back">
+        <a asp-action="Index" class="btn-back-neon">
             <i class="bi bi-arrow-left"></i>
-            Volver
+            <span>Volver</span>
         </a>
     </div>
 
     @if (ViewBag.Error != null)
     {
-        <div class="alert-error">
-            <i class="bi bi-exclamation-circle"></i>
+        <div class="alert-neon alert-error">
+            <i class="bi bi-exclamation-triangle-fill"></i>
             <span>@ViewBag.Error</span>
         </div>
     }
 
-    <div class="form-card">
+    <!-- Form Card -->
+    <div class="form-glass-card">
         <form asp-action="Edit" method="post">
             <input type="hidden" asp-for="IdProducto" />
             
-            <div class="form-grid">
-                <div class="form-group full-width">
-                    <label asp-for="NombreProducto" class="form-label">
-                        <i class="bi bi-box"></i>
-                        Nombre del Producto
+            <div class="form-grid-neon">
+                <!-- Nombre del Producto -->
+                <div class="form-group-neon full-width">
+                    <label asp-for="NombreProducto" class="form-label-neon">
+                        <i class="bi bi-box-seam"></i>
+                        <span>Nombre del Producto</span>
+                        <span class="required-star">*</span>
                     </label>
-                    <input asp-for="NombreProducto" class="form-input" placeholder="Ingrese el nombre del producto" required maxlength="40" />
-                    <span asp-validation-for="NombreProducto" class="text-danger"></span>
+                    <div class="input-wrapper-neon">
+                        <input asp-for="NombreProducto" 
+                               class="form-input-neon" 
+                               placeholder="Ej: Laptop HP Pavilion" 
+                               required 
+                               maxlength="40" />
+                        <div class="input-glow"></div>
+                    </div>
+                    <span asp-validation-for="NombreProducto" class="validation-error"></span>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="IdCategoria" class="form-label">
-                        <i class="bi bi-tag"></i>
-                        Categoría
+                <!-- Categoría -->
+                <div class="form-group-neon">
+                    <label asp-for="IdCategoria" class="form-label-neon">
+                        <i class="bi bi-tag-fill"></i>
+                        <span>Categoría</span>
+                        <span class="required-star">*</span>
                     </label>
-                    <select asp-for="IdCategoria" class="form-select" required>
-                        <option value="">Seleccione una categoría</option>
-                        @foreach (var categoria in ViewBag.Categorias)
-                        {
-                            <option value="@categoria.IdCategoria">@categoria.NombreCategoria</option>
-                        }
-                    </select>
-                    <span asp-validation-for="IdCategoria" class="text-danger"></span>
+                    <div class="select-wrapper-neon">
+                        <select asp-for="IdCategoria" class="form-select-neon" required>
+                            <option value="">Selecciona una categoría</option>
+                            @foreach (var categoria in ViewBag.Categorias)
+                            {
+                                <option value="@categoria.IdCategoria">@categoria.NombreCategoria</option>
+                            }
+                        </select>
+                        <i class="bi bi-chevron-down select-arrow"></i>
+                    </div>
+                    <span asp-validation-for="IdCategoria" class="validation-error"></span>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="IdProveedor" class="form-label">
+                <!-- Proveedor -->
+                <div class="form-group-neon">
+                    <label asp-for="IdProveedor" class="form-label-neon">
                         <i class="bi bi-building"></i>
-                        Proveedor
+                        <span>Proveedor</span>
+                        <span class="required-star">*</span>
                     </label>
-                    <select asp-for="IdProveedor" class="form-select" required>
-                        <option value="">Seleccione un proveedor</option>
-                        @foreach (var proveedor in ViewBag.Proveedores)
-                        {
-                            <option value="@proveedor.IdProveedor">@proveedor.NombreCia</option>
-                        }
-                    </select>
-                    <span asp-validation-for="IdProveedor" class="text-danger"></span>
+                    <div class="select-wrapper-neon">
+                        <select asp-for="IdProveedor" class="form-select-neon" required>
+                            <option value="">Selecciona un proveedor</option>
+                            @foreach (var proveedor in ViewBag.Proveedores)
+                            {
+                                <option value="@proveedor.IdProveedor">@proveedor.NombreCia</option>
+                            }
+                        </select>
+                        <i class="bi bi-chevron-down select-arrow"></i>
+                    </div>
+                    <span asp-validation-for="IdProveedor" class="validation-error"></span>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Umedida" class="form-label">
+                <!-- Unidad de Medida -->
+                <div class="form-group-neon">
+                    <label asp-for="Umedida" class="form-label-neon">
                         <i class="bi bi-rulers"></i>
-                        Unidad de Medida
+                        <span>Unidad de Medida</span>
                     </label>
-                    <input asp-for="Umedida" class="form-input" placeholder="Ej: 12 - bot. 500 ml" maxlength="100" />
-                    <span asp-validation-for="Umedida" class="text-danger"></span>
+                    <div class="input-wrapper-neon">
+                        <input asp-for="Umedida" 
+                               class="form-input-neon" 
+                               placeholder="Ej: 1 unidad, 12 bot. 500ml" 
+                               maxlength="100" />
+                        <div class="input-glow"></div>
+                    </div>
+                    <span asp-validation-for="Umedida" class="validation-error"></span>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="PrecioUnidad" class="form-label">
+                <!-- Precio -->
+                <div class="form-group-neon">
+                    <label asp-for="PrecioUnidad" class="form-label-neon">
                         <i class="bi bi-currency-dollar"></i>
-                        Precio Unitario
+                        <span>Precio Unitario</span>
+                        <span class="required-star">*</span>
                     </label>
-                    <input asp-for="PrecioUnidad" type="number" step="0.01" min="0.01" class="form-input" placeholder="0.00" required />
-                    <span asp-validation-for="PrecioUnidad" class="text-danger"></span>
+                    <div class="input-wrapper-neon">
+                        <input asp-for="PrecioUnidad" 
+                               type="number" 
+                               step="0.01" 
+                               min="0.01" 
+                               class="form-input-neon" 
+                               placeholder="0.00" 
+                               required />
+                        <div class="input-glow"></div>
+                    </div>
+                    <span asp-validation-for="PrecioUnidad" class="validation-error"></span>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="UnidadesEnExistencia" class="form-label">
+                <!-- Stock -->
+                <div class="form-group-neon">
+                    <label asp-for="UnidadesEnExistencia" class="form-label-neon">
                         <i class="bi bi-boxes"></i>
-                        Stock
+                        <span>Stock</span>
+                        <span class="required-star">*</span>
                     </label>
-                    <input asp-for="UnidadesEnExistencia" type="number" min="0" max="32767" class="form-input" placeholder="0" required />
-                    <span asp-validation-for="UnidadesEnExistencia" class="text-danger"></span>
+                    <div class="input-wrapper-neon">
+                        <input asp-for="UnidadesEnExistencia" 
+                               type="number" 
+                               min="0" 
+                               max="32767" 
+                               class="form-input-neon" 
+                               placeholder="0" 
+                               required />
+                        <div class="input-glow"></div>
+                    </div>
+                    <span asp-validation-for="UnidadesEnExistencia" class="validation-error"></span>
                 </div>
             </div>
 
-            <div class="form-actions">
-                <a asp-action="Index" class="btn-secondary">
+            <!-- Form Actions -->
+            <div class="form-actions-neon">
+                <a asp-action="Index" class="btn-cancel-neon">
                     <i class="bi bi-x-circle"></i>
-                    Cancelar
+                    <span>Cancelar</span>
                 </a>
-                <button type="submit" class="btn-primary">
+                <button type="submit" class="btn-submit-neon btn-edit-color">
                     <i class="bi bi-check-circle"></i>
-                    Actualizar Producto
+                    <span>Actualizar Producto</span>
+                    <div class="btn-glow"></div>
                 </button>
             </div>
         </form>
@@ -118,182 +174,318 @@
 }
 
 <style>
-    .form-container {
-        max-width: 900px;
+    .form-cyberpunk-container {
+        max-width: 1000px;
         margin: 0 auto;
         padding: 2rem;
+        animation: fadeInUp 0.6s ease-out;
     }
 
-    .form-header {
+    .form-hero-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .form-title {
-        font-size: 2rem;
-        font-weight: 600;
-        color: #1d1d1f;
-        margin: 0 0 0.5rem 0;
+    .form-hero-content {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 1.5rem;
     }
 
-    .form-title i {
-        font-size: 1.75rem;
-        color: #ff9500;
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-gradient);
+        border-radius: 20px;
+        font-size: 2.5rem;
+        color: white;
+        animation: glow 3s ease-in-out infinite;
     }
 
-    .form-subtitle {
-        color: #6e6e73;
-        font-size: 1rem;
+    .icon-circle.edit-icon {
+        background: var(--secondary-gradient);
+    }
+
+    .form-hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
         margin: 0;
     }
 
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.25rem;
-        background: rgba(0, 0, 0, 0.04);
-        color: #1d1d1f;
-        text-decoration: none;
-        border-radius: 12px;
-        font-weight: 500;
-        transition: all 0.2s ease;
+    .text-gradient-edit {
+        background: var(--secondary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
-    .btn-back:hover {
-        background: rgba(0, 0, 0, 0.08);
-        color: #1d1d1f;
-        transform: translateY(-1px);
+    .form-hero-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin: 0.5rem 0 0 0;
     }
 
-    .alert-error {
+    .btn-back-neon {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        padding: 1rem 1.25rem;
-        border-radius: 12px;
-        margin-bottom: 1.5rem;
-        background: rgba(255, 59, 48, 0.1);
-        border: 1px solid rgba(255, 59, 48, 0.3);
-        color: #c41e3a;
+        padding: 1rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-primary);
+        text-decoration: none;
+        border-radius: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .form-card {
-        background: rgba(255, 255, 255, 0.8);
+    .btn-back-neon:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        transform: translateX(-5px);
+    }
+
+    .alert-neon {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
         border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 0, 0, 0.06);
+        margin-bottom: 2rem;
+        backdrop-filter: blur(20px);
+        border: 1px solid;
+        animation: fadeInUp 0.4s ease-out;
     }
 
-    .form-grid {
+    .alert-error {
+        background: rgba(250, 112, 154, 0.1);
+        border-color: rgba(250, 112, 154, 0.3);
+        color: var(--neon-pink);
+    }
+
+    .alert-neon i {
+        font-size: 1.5rem;
+    }
+
+    .form-glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-grid-neon {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        gap: 2rem;
+        margin-bottom: 3rem;
     }
 
-    .form-group {
+    .form-group-neon {
         display: flex;
         flex-direction: column;
     }
 
-    .form-group.full-width {
+    .form-group-neon.full-width {
         grid-column: 1 / -1;
     }
 
-    .form-label {
+    .form-label-neon {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-weight: 500;
-        color: #1d1d1f;
-        margin-bottom: 0.5rem;
-        font-size: 0.95rem;
-    }
-
-    .form-label i {
-        color: #ff9500;
+        gap: 0.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
         font-size: 1rem;
     }
 
-    .form-input, .form-select {
-        padding: 0.875rem 1rem;
-        border: 1px solid rgba(0, 0, 0, 0.12);
-        border-radius: 10px;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-        background: rgba(255, 255, 255, 0.9);
-        color: #1d1d1f;
+    .form-label-neon i {
+        color: var(--neon-cyan);
+        font-size: 1.2rem;
     }
 
-    .form-input:focus, .form-select:focus {
+    .required-star {
+        color: var(--neon-pink);
+        font-size: 1.2rem;
+    }
+
+    .input-wrapper-neon {
+        position: relative;
+    }
+
+    .form-input-neon {
+        width: 100%;
+        padding: 1.25rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-input-neon:focus {
         outline: none;
-        border-color: #ff9500;
-        box-shadow: 0 0 0 4px rgba(255, 149, 0, 0.1);
-        background: white;
+        border-color: var(--neon-cyan);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
     }
 
-    .form-input::placeholder {
-        color: #86868b;
+    .form-input-neon:focus + .input-glow {
+        opacity: 1;
     }
 
-    .form-actions {
+    .input-glow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 14px;
+        background: var(--success-gradient);
+        opacity: 0;
+        filter: blur(20px);
+        z-index: -1;
+        transition: opacity 0.3s ease;
+    }
+
+    .form-input-neon::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .select-wrapper-neon {
+        position: relative;
+    }
+
+    .form-select-neon {
+        width: 100%;
+        padding: 1.25rem 3rem 1.25rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        appearance: none;
+    }
+
+    .form-select-neon:focus {
+        outline: none;
+        border-color: var(--neon-cyan);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+    }
+
+    .form-select-neon option {
+        background: var(--dark-bg);
+        color: var(--text-primary);
+        padding: 1rem;
+    }
+
+    .select-arrow {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--neon-cyan);
+        font-size: 1.2rem;
+        pointer-events: none;
+    }
+
+    .validation-error {
+        color: var(--neon-pink);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
         display: flex;
-        gap: 1rem;
-        justify-content: flex-end;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    .btn-primary, .btn-secondary {
-        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.875rem 1.75rem;
-        border-radius: 12px;
-        font-weight: 500;
+    }
+
+    .validation-error::before {
+        content: '⚠';
+        font-size: 1.1rem;
+    }
+
+    .form-actions-neon {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: flex-end;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-cancel-neon,
+    .btn-submit-neon {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem 2rem;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 1.05rem;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         border: none;
         cursor: pointer;
-        font-size: 1rem;
+        position: relative;
+        overflow: hidden;
     }
 
-    .btn-primary {
-        background: rgba(255, 149, 0, 0.95);
+    .btn-cancel-neon {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-primary);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-cancel-neon:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+    }
+
+    .btn-submit-neon {
+        background: var(--primary-gradient);
         color: white;
+        z-index: 1;
     }
 
-    .btn-primary:hover {
-        background: rgba(255, 149, 0, 1);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+    .btn-submit-neon.btn-edit-color {
+        background: var(--secondary-gradient);
     }
 
-    .btn-secondary {
-        background: rgba(0, 0, 0, 0.04);
-        color: #1d1d1f;
+    .btn-submit-neon:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 40px rgba(245, 87, 108, 0.6);
     }
 
-    .btn-secondary:hover {
-        background: rgba(0, 0, 0, 0.08);
-        color: #1d1d1f;
+    .btn-submit-neon:hover .btn-glow {
+        transform: translate(-50%, -50%) scale(2);
     }
 
-    .text-danger {
-        color: #c41e3a;
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
+    .btn-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.5s ease;
     }
 
-   
+    
 </style>
